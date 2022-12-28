@@ -61,9 +61,31 @@ async function run() {
             const comment = await commentCollections.find(query).sort({ _id: -1 }).toArray()
             res.send(comment)
         })
+        app.get('/popularPosts', async (req, res) => {
+            const popularPosts = await postCollections.find({}).limit(3).sort({ loveReact: -1 }).toArray()
+            res.send(popularPosts)
+        })
+
+
+        // put method 
+        app.put('/posts', async (req, res) => {
+            const { id } = req.query
+            const data = req.body
+            const query = { _id: ObjectId(id) }
+            const options = { upsert: true }
+            const updateData = {
+                $set: {
+                    loveReact: data.countLove
+                }
+            }
+            const result = postCollections.updateOne(query, updateData, options)
+            res.send(result)
+        })
     }
     catch {
-
+        err => {
+            console.log(err);
+        }
     }
 }
 run().catch()
