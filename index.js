@@ -75,10 +75,10 @@ async function run() {
             const options = { upsert: true }
             const updateData = {
                 $set: {
-                    loveReact: data.countLove
+                    loveReact: data.countLove + 1
                 }
             }
-            const result = postCollections.updateOne(query, updateData, options)
+            const result = await postCollections.updateOne(query, updateData, options)
             res.send(result)
         })
     }
